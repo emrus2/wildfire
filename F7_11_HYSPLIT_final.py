@@ -96,13 +96,12 @@ markdensity = 6
 marksize = 4
 
 #%% FIGURE MAKING
-
 for location in locations:
     #create subplot, determine sizes
-    fig = plt.figure(figsize=[14.2, 9])
+    fig = plt.figure(figsize=[13.5, 9])
     location_spaced = string_spacing(location)
     TITLE = f'{location_spaced}, {d_states[location]}'
-    fig.suptitle(TITLE,fontweight='bold',size=16, y=0.9875)
+    fig.suptitle(TITLE,fontweight='bold',size=17, y=0.99)
     spec = fig.add_gridspec(ncols=3, nrows=6) #spec=row,column
     
     n_column = 0
@@ -188,7 +187,7 @@ for location in locations:
                 #create subplot 1, define gridspec
                 ax1 = fig.add_subplot(spec[0:3,n_column])
                 #set subplot title
-                ax1.set_title(f'{days[n_column]} SEP',fontsize=12,fontweight='bold',pad=0.4)
+                ax1.set_title(f'{days[n_column]} SEP',fontsize=14,fontweight='bold',pad=0.4)
                 #create equidistant cylindrical projection basemap for subplot 1
                 area_thresh = 10000
                 map = Basemap(projection='cyl',llcrnrlat=latmin,urcrnrlat=latmax,llcrnrlon=lonmin,urcrnrlon=lonmax,resolution='l',area_thresh=area_thresh) #low resolution
@@ -217,8 +216,9 @@ for location in locations:
                     gridline_int = 10
                 else:
                     gridline_int = 5
-                map.drawparallels(np.arange(30,latmax,gridline_int), labels=[0,1,0,0], fontsize=10,color=border_c, linewidth=border_w,zorder=3)
-                map.drawmeridians(np.arange(-95,lonmin+1,-gridline_int), labels=[0,0,0,1], fontsize=10,color=border_c, linewidth=border_w,zorder=3)
+                gridlinefont= 11
+                map.drawparallels(np.arange(30,latmax,gridline_int), labels=[0,1,0,0], fontsize=gridlinefont,color=border_c, linewidth=border_w,zorder=3)
+                map.drawmeridians(np.arange(-95,lonmin+1,-gridline_int), labels=[0,0,0,1], fontsize=gridlinefont,color=border_c, linewidth=border_w,zorder=3)
 
                 #Plot trajectories on map
                 #create legend elememt list
@@ -239,8 +239,8 @@ for location in locations:
                 #add sublabels to single plots
                 sublabel_loc = mtransforms.ScaledTranslation(4/72, -4/72, fig.dpi_scale_trans)
                 ax1.text(0.005, 0.995, sublabel[n_column], transform=ax1.transAxes + sublabel_loc,
-                    fontsize=10, verticalalignment='top', 
-                    bbox=dict(facecolor='1', edgecolor='none', pad=2),zorder=10)
+                    fontsize=12, verticalalignment='top', fontweight='bold',
+                    bbox=dict(facecolor='1', edgecolor='none', alpha=0.85, pad=2),zorder=10)
                 
                 #add legend for arrival times
                 if n_column == 0:
@@ -293,7 +293,7 @@ for location in locations:
             
             #create ylabels on rightmost side only
             if n_column == 2:
-                ax2.set_ylabel(names[n_var],fontweight='bold',labelpad=ylabelpad[n_var])
+                ax2.set_ylabel(names[n_var],fontsize=12,fontweight='bold',labelpad=ylabelpad[n_var])
         
             #set x axis label and ticks
             ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H'))    
@@ -302,8 +302,10 @@ for location in locations:
             if n_var != 2:
                 plt.gca().tick_params(axis='x',label1On=False)
             else:
-                ax2.set_xlabel(f'          {days[n_column]} SEP',fontsize=8)
-            ax2.tick_params(axis='both',which='both',labelsize=8)
+                ax2.set_xlabel(f'{days[n_column]} SEP',fontsize=11)
+                ax2.xaxis.set_label_coords(x=0.545,y=-0.25)
+
+            ax2.tick_params(axis='both',which='both',labelsize=10)
                 
             #add to counters
             n_row += 1
@@ -312,10 +314,10 @@ for location in locations:
         n_column += 1
         
     #adjust location of subplots, positions are fractions of the figure width and height
-    fig.subplots_adjust(top=0.94, bottom = 0.0475, right = 0.957, left = 0.043, wspace=.12)
+    fig.subplots_adjust(top=0.935, bottom = 0.055, right = 0.9475, left = 0.005, wspace=.13)
     
     #SAVE FIGURE
-    save_dir='I:\\Emma\\LaborDayWildfires\\Figures\\HYSPLIT'
+    save_dir='I:\\Emma\\LaborDayWildfires\\Figures\\1FinalFigures\\'
     os.chdir(save_dir)
-    plt.savefig(f'TRAJECTORIES_{location}_legends.png',dpi=300)
+    plt.savefig(f'TRAJECTORIES_{location}_legends_rev.png',dpi=300)
     plt.show()
